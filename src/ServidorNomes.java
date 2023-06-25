@@ -2,13 +2,25 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ServidorNomes {
-    public static final HashMap<IAgencia, Maquina> Agencias = new HashMap<>();
-    public static final HashMap<IAgencia, IAgente> Agentes = new HashMap<>();
-
+    public static INomes Nomes;
     public static void main(String[] args) {
+        new ServidorNomes();
         CriaAgenciaNomes();
+    }
+
+    public ServidorNomes(){
+        try{
+            Nomes = new Nomes();
+            Registry registry = LocateRegistry.createRegistry(5000);
+            registry.bind("ServidorNomes", Nomes);
+            System.out.println("Servidor de Nomes iniciado com sucesso");
+        }catch (Exception ex){
+            System.out.println("Erro ao iniciar o servidor: "+ex.getMessage());
+            System.exit(0);
+        }
     }
 
     public static void CriaAgenciaNomes(){
@@ -27,7 +39,7 @@ public class ServidorNomes {
                 Registry registry = LocateRegistry.createRegistry(port);
                 registry.bind(name, repository);
                 System.out.println("Agencia " + name + " iniciado com sucesso");
-                Agencias.put(repository, maquina);
+                Nomes.addAgencia(maquina, repository);
             } catch (Exception ex) {
                 System.out.println("Erro ao iniciar a Agencia: " + ex.getMessage());
                 System.exit(0);
