@@ -1,0 +1,7 @@
+O cliente vai fazer uma reunião e escolhe uma das agências para ser o local da reunião
+O cliente recebe do usuário uma lista de convidados com os identificadores dos agentes que irão participar da reunião
+O cliente consulta o servidor de nomes para saber a agencia de cada agente e enviar uma mensagem com o convite
+e a agência que será a reunião
+Quando os agentes recebem a mensagem, eles migram para a agência da reunião
+O cliente pode encerrar a reunião, trocar de agência e começar outra reunião
+Desta forma os agentes vão migrando de agência em agência conforme são convidados para a reunião

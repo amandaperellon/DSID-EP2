@@ -1,3 +1,5 @@
+import com.sun.source.tree.ReturnTree;
+
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -12,8 +14,6 @@ public class Agencia extends UnicastRemoteObject implements IAgencia, Serializab
     private Maquina Maquina;
     private HashMap<IAgente, String> Agentes;
 
-    private INomes ServidorNomes;
-
     public Agencia() throws RemoteException {
         Agentes = new HashMap<>();
     }
@@ -24,22 +24,10 @@ public class Agencia extends UnicastRemoteObject implements IAgencia, Serializab
         Maquina = maquina;
     }
 
-    public INomes ConectaServidorNomes(){
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost",5000);
-            ServidorNomes = (INomes) registry.lookup("ServidorNomes");
-            System.out.println("Conectado com o servidor de nomes");
-            return ServidorNomes;
-        }catch(Exception e){
-            System.out.println("Não foi possível se conectar com o servidor: "+e.getMessage());
-            return null;
-        }
-    }
-
     @Override
-    public void criaAgente(String nome) throws RemoteException {
-        IAgente agente = new Agente(nome);
-        ConectaServidorNomes();
-        ServidorNomes.addAgente(agente, this);
+    public IAgente criaAgente(String codigo) throws RemoteException {
+        IAgente agente = new Agente(codigo);
+        Agentes.put(agente, codigo);
+        return agente;
     }
 }
