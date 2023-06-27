@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +6,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class ServidorAgencia {
     private static final Scanner sc = new Scanner(System.in);
@@ -58,7 +56,7 @@ public class ServidorAgencia {
 
     public static void printResults(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
+        String line;
         while ((line = reader.readLine()) != null) {
             System.out.println(line);
         }
@@ -113,6 +111,7 @@ public class ServidorAgencia {
                 addagente: Adiciona o agente a agencia
                 removeagente:
                 migrateagente:
+                sendmessageagente: Enviar determinada mensagem a um agente 
                 quit: Encerra a execução
                 -------------------------------------------------------------------------------
                 """);

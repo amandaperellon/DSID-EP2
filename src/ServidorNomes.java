@@ -1,8 +1,6 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class ServidorNomes {
     public static INomes Nomes;
