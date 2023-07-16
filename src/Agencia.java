@@ -1,4 +1,6 @@
-import java.io.Serializable;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -8,9 +10,11 @@ public class Agencia extends UnicastRemoteObject implements IAgencia, Serializab
     private UUID Id;
     private Maquina Maquina;
     private HashMap<IAgente, String> Agentes;
+    public Sandbox sandbox;
 
     public Agencia() throws RemoteException {
         Agentes = new HashMap<>();
+        sandbox = new Sandbox();
     }
 
     @Override
@@ -22,9 +26,45 @@ public class Agencia extends UnicastRemoteObject implements IAgencia, Serializab
     @Override
     public IAgente criaAgente(String codigo) throws RemoteException {
         // Criar thread com agente
-        IAgente agente = new Agente(codigo);
+        Agent agente = new Kilroy(Maquina, codigo);
         Agentes.put(agente, codigo);
+        sandbox.AddAgente(agente);
+        sandbox.start();
         return agente;
+    }
+    @Override
+    public void rodaAgente(IAgente agente) throws RemoteException{
+        try {
+            Agentes.put(agente, agente.getArquivo());
+            System.out.println("roda Agente");
+//            Sandbox sandbox = new Sandbox(agente);
+//            System.out.println("inicio sandbox");
+//            sandbox.start();
+//            System.out.println("start sandbox");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addAgenteSandbox(Agent agente) throws RemoteException {
+        sandbox.AddAgente(agente);
+    }
+
+    public UUID getId() {
+        return Id;
+    }
+
+    public void setId(UUID id) {
+        Id = id;
+    }
+
+    public HashMap<IAgente, String> getAgentes() {
+        return Agentes;
+    }
+
+    public void setAgentes(HashMap<IAgente, String> agentes) {
+        Agentes = agentes;
     }
 
     //TODO: esses metodos devem ser bloqueante
@@ -39,7 +79,12 @@ public class Agencia extends UnicastRemoteObject implements IAgencia, Serializab
     }
 
 
-    public void transportarAgente (IAgente agente, UUID agenciaDestino) {
+    public void transportarAgente (IAgente agente, Maquina maquina) {
+        try {
+            agente.goToAgencia(maquina);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         // Serializar o objeto, persistindo variaveis
         // Consultar servico de nomes para saber em qual servidor esta a agencia de destino
         // Chamar receberAgente na agencia de destino

@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class ServidorAgencia {
     private static final Scanner sc = new Scanner(System.in);
     public static IAgencia Agencia;
+    public static IAgente Agente;
     public static INomes ServidorNomes;
 
     public static void main(String[] args) {
@@ -73,9 +74,9 @@ public class ServidorAgencia {
                     case "addagente" -> {
                         System.out.print("Entre com o codigo do agente ");
                         String codigo = sc.nextLine();
-                        IAgente agente = Agencia.criaAgente(codigo);
-                        System.out.print("Agente com id " + agente.getId() + " criado com sucesso");
-                        AdicionaAgenteServidorNomes(agente);
+                        Agente = Agencia.criaAgente(codigo);
+                        System.out.print("Agente com id " + Agente.getId() + " criado com sucesso");
+                        AdicionaAgenteServidorNomes(Agente);
                     }
                     case "runteste"->{
                         String[] cmdArray = new String[2];
@@ -84,7 +85,9 @@ public class ServidorAgencia {
                         Process pro = Runtime.getRuntime().exec(cmdArray, null, new File(System.getProperty("user.dir")+"\\out\\production\\EP2\\"));
                         printResults(pro);
                     }
-
+                    case "irnovaagencia"->{
+                        Agente.goToAgencia(new Maquina("Teste2", 7000, "localhost"));
+                    }
                     case "help" ->
                             Menu();
 
@@ -98,7 +101,7 @@ public class ServidorAgencia {
                 }
                 System.out.println("\n");
             } catch (Exception e) {
-                System.out.println("Erro: "+e.getMessage());
+                e.printStackTrace();
             }
         }
     }
